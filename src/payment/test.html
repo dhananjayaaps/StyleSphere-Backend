@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+    .cart-item {
+      margin: 5px 0;
+    }
+    .button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: blue;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button:disabled {
+      background-color: gray;
+    }
+  </style>
+</head>
+<body>
+  <h1>Payment Page</h1>
+
+  <div id="messages"></div>
+
+  <div id="cart-section">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+  </div>
+
+  <div id="payment-method-section" style="margin-top: 20px;">
+    <h2>Payment Method</h2>
+    <label>
+      <input type="radio" name="paymentMethod" value="card" checked>
+      Card
+    </label>
+    <label style="margin-left: 10px;">
+      <input type="radio" name="paymentMethod" value="paypal">
+      PayPal
+    </label>
+  </div>
+
+  <button class="button" id="pay-button" disabled>Proceed to Payment</button>
+
+  <script>
+    // Mock token - Replace with real JWT token from your app
+    const jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAMy5jb20iLCJzdWIiOjIsInJvbGVzIjpbInVzZXIiLCJhZG1pbiJdLCJpYXQiOjE3MzI1MjcxODYsImV4cCI6MTczMjUzMDc4Nn0.SbHImKFOMPwYmUnuPflj0wy91G6vh-tdpnMjI6GmYMM";
+    const apiUrl = "http://localhost:3000";
+
+    const cartItemsContainer = document.getElementById("cart-items");
+    const messagesContainer = document.getElementById("messages");
+    const payButton = document.getElementById("pay-button");
+    let cartItems = [];
+
+    // Fetch cart items
+    function fetchCartItems() {
+      fetch(`${apiUrl}/cart`, {
+        method: "GET",
+        headers: {
+            access_token: jwtToken
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          cartItems = data;
+          renderCartItems();
+        })
+        .catch((error) => showMessage("Error fetching cart items: " + error.message, "error"));
+    }
+
+    // Render cart items
+    function renderCartItems() {
+      cartItemsContainer.innerHTML = "";
+      if (cartItems.length === 0) {
+        cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+        payButton.disabled = true;
+      } else {
+        cartItems.forEach((item) => {
+          const li = document.createElement("li");
+          li.className = "cart-item";
+          li.innerHTML = `
+            <input type="checkbox" value="${item.id}">
+            ${item.model.name} ($${item.model.price})
+          `;
+          cartItemsContainer.appendChild(li);
+        });
+        payButton.disabled = false;
+      }
+    }
+
+    // Get selected payment method
+    function getSelectedPaymentMethod() {
+      const radios = document.getElementsByName("paymentMethod");
+      for (let radio of radios) {
+        if (radio.checked) {
+          return radio.value;
+        }
+      }
+      return "card";
+    }
+
+    // Show messages (error or success)
+    function showMessage(message, type) {
+      messagesContainer.innerHTML = `<p class="${type}">${message}</p>`;
+    }
+
+    // Handle payment
+    function handlePayment() {
+      const selectedItems = Array.from(
+        document.querySelectorAll("#cart-items input:checked")
+      ).map((checkbox) => parseInt(checkbox.value));
+
+      if (selectedItems.length === 0) {
+        showMessage("Please select at least one item to proceed with payment.", "error");
+        return;
+      }
+
+      const paymentMethod = getSelectedPaymentMethod();
+      payButton.disabled = true;
+
+      fetch(`${apiUrl}/payment`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: selectedItems,
+          paymentMethod: paymentMethod,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            showMessage("Payment successful: " + data.message, "success");
+            fetchCartItems(); // Refresh cart
+          } else {
+            showMessage("Payment failed: " + data.message, "error");
+          }
+        })
+        .catch((error) => showMessage("Error processing payment: " + error.message, "error"))
+        .finally(() => {
+          payButton.disabled = false;
+        });
+    }
+
+    // Event listeners
+    payButton.addEventListener("click", handlePayment);
+
+    // Initial load
+    fetchCartItems();
+  </script>
+</body>
+</html>

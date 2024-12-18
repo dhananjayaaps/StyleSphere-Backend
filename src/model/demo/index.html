@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Model Tester</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+  <div class="container">
+    <h1 class="mb-4">3D Model Tester</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="model-file" class="form-label">Upload 3D Model File:</label>
+        <input type="file" id="model-file" name="file" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Analyze & Save Model</button>
+    </form>
+    <hr>
+    <div id="result" class="mt-4">
+      <h2>Results</h2>
+      <pre id="analysis-result"></pre>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
