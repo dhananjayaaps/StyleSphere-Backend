@@ -49,19 +49,6 @@ export class PaymentService {
       totalAmount += model.price * 100; // Convert to cents
     }
 
-    // Create a PaymentIntent
-    // const paymentIntent = await stripe.paymentIntents.create({
-    //   amount: totalAmount,
-    //   currency: 'usd',
-    //   payment_method: paymentMethodId,
-    //   confirm: true,
-    // });
-
-    // if (paymentIntent.status !== 'succeeded') {
-    //   throw new Error('Payment failed.');
-    // }
-
-    // Record each purchase
     for (const model of buying_models) {
       const payment = this.paymentRepository.create({
         user: { id: userId },

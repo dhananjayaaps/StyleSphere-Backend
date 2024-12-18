@@ -14,15 +14,18 @@ export class CategoryService {
   // Method to seed initial categories
   async seedCategories() {
     const categories = [
-      { name: 'Architectural' },
-      { name: 'Character' },
-      { name: 'Vehicles' },
-      { name: 'Furniture' },
-      { name: 'Nature' },
-      { name: 'Environment' },
-      { name: 'Props' },
-      { name: 'Weapons' },
-      { name: 'Animals'}
+      { name: "Select Category" },
+      { name: "Men's Wear" },
+      { name: "Women's Wear" },
+      { name: "Kids' Wear" },
+      { name: "Casual Wear" },
+      { name: "Formal Wear" },
+      { name: "Sportswear" },
+      { name: "Traditional Clothing" },
+      { name: "Accessories" },
+      { name: "Footwear" },
+      { name: "Custom Designs" },
+      { name: "Boutique Collections" },
     ];
 
     // Insert categories if the table is empty
