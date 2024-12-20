@@ -1,4 +1,4 @@
-export class CreateVebxrmodelDto {
+export class CreateItemDto {
   title: string;
   description: string;
   image1Url: string;

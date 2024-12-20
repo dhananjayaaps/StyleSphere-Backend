@@ -6,10 +6,9 @@ import { Seller } from './entities/seller.entity';
 import { User, UserRole } from 'src/users/user.entity';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 import { ModelEntity } from 'src/model/entities/model.entity';
-import { ReviewRequest } from 'src/review_request/entities/review_request.entity';
 
 @Injectable()
 export class SellerService {
@@ -20,14 +19,11 @@ export class SellerService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>, // Inject User repository
 
-    @InjectRepository(Vebxrmodel)
-    private readonly modelRepository: Repository<Vebxrmodel>, // Inject Model repository
+    @InjectRepository(Item)
+    private readonly modelRepository: Repository<Item>, // Inject Model repository
 
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>, // Inject Payment repository
-
-    @InjectRepository(ReviewRequest)
-    private readonly reviewRequestRepository: Repository<ReviewRequest>, // Inject ReviewRequest repository
   ) {}
 
   // Create a new seller
@@ -130,12 +126,7 @@ export class SellerService {
       .select('SUM(payment.amount)', 'totalEarnings')
       .getRawOne()
       .then((result) => parseFloat(result.totalEarnings) || 0);
-  
-    // Calculate the total rejected models
-    const totalRejected = await this.reviewRequestRepository.count({ 
-      where: { modelOwner: { id: seller.id }, rejected: true },
-    });
-  
+
     const dailyEarnings = await this.paymentRepository
     .createQueryBuilder('payment')
     .leftJoin('payment.model', 'model')
@@ -182,7 +173,6 @@ export class SellerService {
       totalLikes,
       totalEarnings,
       dailyEarnings : formattedDailyEarnings,
-      totalRejected,
       modelEarnings,
     };
   }

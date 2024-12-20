@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/users/user.entity';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 
 @Entity()
 export class UserLikes {
@@ -10,6 +10,6 @@ export class UserLikes {
   @ManyToOne(() => User, (user) => user.likes, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Vebxrmodel, (model) => model.likes, { onDelete: 'CASCADE' })
-  model: Vebxrmodel;
+  @ManyToOne(() => Item, (model) => model.likes, { onDelete: 'CASCADE' })
+  model: Item;
 }

@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { VebxrmodelService } from 'src/vebxrmodel/vebxrmodel.service';
+import { ItemService } from 'src/vebxrmodel/item.service';
 import { StatisticsService } from './statistics.service';
 
 @Controller('statistics')

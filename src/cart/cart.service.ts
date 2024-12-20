@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cart } from './entities/cart.entity';
 import { User } from 'src/users/user.entity';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 import { GetCartDto } from './dto/get-cart.dto'; // Adjust path if necessary
 import { Mode } from 'fs';
 
@@ -14,8 +14,8 @@ export class CartService {
     private readonly cartRepository: Repository<Cart>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Vebxrmodel)
-    private readonly vebxrmodelRepository: Repository<Vebxrmodel>,
+    @InjectRepository(Item)
+    private readonly vebxrmodelRepository: Repository<Item>,
   ) {}
 
   // Add a model to the cart for a specific user

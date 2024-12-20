@@ -1,4 +1,4 @@
-export class UpdateVebxrmodelDto {
+export class UpdateItemDto {
     title?: string;
     description?: string;
     modelUrl?: string;

@@ -1,21 +1,19 @@
 import { Module } from '@nestjs/common';
-import { VebxrmodelService } from './vebxrmodel.service';
-import { VebxrmodelController } from './vebxrmodel.controller';
+import { ItemService } from './item.service';
+import { ItemController } from './item.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Vebxrmodel } from './entities/vebxrmodel.entity';
+import { Item } from './entities/item.entity';
 import { Category } from 'src/category/category.entity';
-import { CategoryModule } from 'src/category/category.module';
 import { Seller } from 'src/seller/entities/seller.entity';
-import { ReviewRequest } from 'src/review_request/entities/review_request.entity';
 import { ModelEntity } from 'src/model/entities/model.entity';
 import { UserLikes } from 'src/userlikes/entities/userlike.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Vebxrmodel, Category, Seller, ReviewRequest, ModelEntity, UserLikes, Payment]),
+    TypeOrmModule.forFeature([Item, Category, Seller, ModelEntity, UserLikes, Payment]),
   ],
-  controllers: [VebxrmodelController],
-  providers: [VebxrmodelService],
+  controllers: [ItemController],
+  providers: [ItemService],
 })
-export class VebxrmodelModule {}
+export class ItemModule {}

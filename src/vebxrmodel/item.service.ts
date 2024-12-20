@@ -1,22 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Not, Repository } from 'typeorm';
-import { Vebxrmodel } from './entities/Vebxrmodel.entity';
-import { CreateVebxrmodelDto } from './dto/create-Vebxrmodel.dto';
-import { UpdateVebxrmodelDto } from './dto/update-Vebxrmodel.dto';
+import { IsNull, Not, Repository } from 'typeorm';
+import { Item } from './entities/item.entity';
+import { CreateItemDto } from './dto/create-item.dto';
 import { Seller } from 'src/seller/entities/seller.entity';
 import { Category } from 'src/category/category.entity';
-import { ReviewRequest } from 'src/review_request/entities/review_request.entity';
 import { ModelEntity } from 'src/model/entities/model.entity';
 import { UserLikes } from 'src/userlikes/entities/userlike.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 
 @Injectable()
-export class VebxrmodelService {
+export class ItemService {
   
   constructor(
-    @InjectRepository(Vebxrmodel)
-    private readonly VebxrmodelRepository: Repository<Vebxrmodel>,
+    @InjectRepository(Item)
+    private readonly VebxrmodelRepository: Repository<Item>,
 
     @InjectRepository(Seller)
     private readonly sellerRepository: Repository<Seller>,
@@ -36,7 +34,7 @@ export class VebxrmodelService {
   ) {}
   
 
-  async create(createVebxrmodelDto: CreateVebxrmodelDto, userId: number): Promise<Vebxrmodel> {
+  async create(createVebxrmodelDto: CreateItemDto, userId: number): Promise<Item> {
     const category = await this.categoryRepository.findOne({
       where: { id: createVebxrmodelDto.category },
     });
@@ -60,11 +58,11 @@ export class VebxrmodelService {
   }
   
 
-  findAll(): Promise<Vebxrmodel[]> {
+  findAll(): Promise<Item[]> {
     return this.VebxrmodelRepository.find();
   }
 
-  findOne(id: number): Promise<Vebxrmodel> {
+  findOne(id: number): Promise<Item> {
     return this.VebxrmodelRepository.findOne({ where: { id } });
   }
 
@@ -82,7 +80,7 @@ export class VebxrmodelService {
     },
     page: number = 1,
     pageSize: number = 10,
-  ): Promise<{ data: Vebxrmodel[]; total: number }> {
+  ): Promise<{ data: Item[]; total: number }> {
     const query = this.VebxrmodelRepository.createQueryBuilder('model');
 
     if (filters.category !== undefined && !isNaN(filters.category)) {
@@ -121,7 +119,7 @@ export class VebxrmodelService {
     userId: number,
     page: number = 1,
     pageSize: number = 10,
-  ): Promise<{ data: (Vebxrmodel & { isUserLiked: boolean })[]; total: number }> {
+  ): Promise<{ data: (Item & { isUserLiked: boolean })[]; total: number }> {
     const query = this.VebxrmodelRepository.createQueryBuilder('model');
   
     // Filter by category if provided
@@ -201,7 +199,7 @@ export class VebxrmodelService {
     }));
   }
 
-  async findSellerModels(sellerId: number): Promise<Vebxrmodel[]> {
+  async findSellerModels(sellerId: number): Promise<Item[]> {
     return this.VebxrmodelRepository.find({
       where: { modelOwner: { id: sellerId } },
     });

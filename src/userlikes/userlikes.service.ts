@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserLikes } from './entities/userlike.entity'; 
 import { User } from 'src/users/user.entity';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 
 @Injectable()
 export class UserLikesService {
@@ -12,8 +12,8 @@ export class UserLikesService {
     private readonly userLikesRepository: Repository<UserLikes>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Vebxrmodel)
-    private readonly vebxrModelRepository: Repository<Vebxrmodel>,
+    @InjectRepository(Item)
+    private readonly vebxrModelRepository: Repository<Item>,
   ) {}
 
   async likeModel(userId: number, modelId: number): Promise<string> {

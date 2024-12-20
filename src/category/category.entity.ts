@@ -1,6 +1,6 @@
 // category.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Vebxrmodel } from '../vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from '../vebxrmodel/entities/item.entity';
 
 @Entity('categories')
 export class Category {
@@ -10,6 +10,6 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToMany(() => Vebxrmodel, (model) => model.category)
-  models: Vebxrmodel[];
+  @OneToMany(() => Item, (model) => model.category)
+  models: Item[];
 }

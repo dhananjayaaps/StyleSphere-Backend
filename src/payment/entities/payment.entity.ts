@@ -1,7 +1,7 @@
 // payment.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from 'src/users/user.entity';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 
 @Entity()
 export class Payment {
@@ -12,9 +12,9 @@ export class Payment {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Vebxrmodel, (model) => model.id, { eager: true })
+  @ManyToOne(() => Item, (model) => model.id, { eager: true })
   @JoinColumn({ name: 'modelId' })
-  model: Vebxrmodel;
+  model: Item;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;

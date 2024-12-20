@@ -3,18 +3,16 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToOne,
   CreateDateColumn,
   JoinColumn,
   OneToMany
 } from 'typeorm';
 import { Seller } from 'src/seller/entities/seller.entity';
 import { Category } from 'src/category/category.entity';
-import { ModelEntity } from 'src/model/entities/model.entity';
 import { UserLikes } from 'src/userlikes/entities/userlike.entity';
 
 @Entity()
-export class Vebxrmodel {
+export class Item {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -3,7 +3,7 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './entities/payment.entity';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 import { StripeService } from 'src/stripe/stripe.service';
 import { GetTransactionsDto } from './dto/transactions.dto';
 import { Seller } from 'src/seller/entities/seller.entity';
@@ -14,8 +14,8 @@ export class PaymentService {
   constructor(
     @InjectRepository(Payment)
     private paymentRepository: Repository<Payment>,
-    @InjectRepository(Vebxrmodel)
-    private modelRepository: Repository<Vebxrmodel>,
+    @InjectRepository(Item)
+    private modelRepository: Repository<Item>,
     private stripeService: StripeService,
     @InjectRepository(Seller)
     private sellerRepository: Repository<Seller>,

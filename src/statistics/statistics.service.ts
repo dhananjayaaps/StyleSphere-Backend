@@ -1,19 +1,17 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Transaction } from 'typeorm';
-import { Vebxrmodel } from 'src/vebxrmodel/entities/vebxrmodel.entity';
+import { Item } from 'src/vebxrmodel/entities/item.entity';
 import { Category } from 'src/category/category.entity';
 import { Payment } from 'src/payment/entities/payment.entity';
 import { User } from 'src/users/user.entity';
 import { Seller } from 'src/seller/entities/seller.entity';
-import { count } from 'console';
-import { ReviewRequest } from 'src/review_request/entities/review_request.entity';
 
 @Injectable()
 export class StatisticsService {
   constructor(
-    @InjectRepository(Vebxrmodel)
-    private readonly vebxrmodelRepository: Repository<Vebxrmodel>,
+    @InjectRepository(Item)
+    private readonly vebxrmodelRepository: Repository<Item>,
 
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
@@ -26,9 +24,6 @@ export class StatisticsService {
 
     @InjectRepository(Seller) 
     private readonly sellerRepository: Repository<Seller>,
-
-    @InjectRepository(ReviewRequest)
-    private readonly reviewRequestRepository: Repository<ReviewRequest>,
 
     // @Inject(forwardRef(() => Transaction))
     // @InjectRepository(Transaction)
@@ -162,24 +157,6 @@ export class StatisticsService {
 
       const sellerImprovement = ((newSellersLastWeek / (sellersCount || 1)) * 100).toFixed(2);
 
-    // total review requests
-    const totalReviewRequests = await this.reviewRequestRepository
-      .createQueryBuilder('reviewRequest')
-      // .where('resoleved = :status', { status: false })
-      .getCount();
-
-    //last week total review requests
-    const newReviewRequestsLastWeek = await this.reviewRequestRepository
-      .createQueryBuilder('reviewRequest')
-      .where('reviewRequest.createdAt BETWEEN :startOfWeek AND :endOfWeek', {
-        startOfWeek,
-        endOfWeek,
-      })
-      .getCount();
-
-    //improment review request calculations
-    const reviewRequestImprovement = ((newReviewRequestsLastWeek / (totalReviewRequests || 1)) * 100).toFixed(2);
-
     const totalCategories = await this.categoryRepository.count();
 
     //total buyers get from payment table
@@ -238,7 +215,6 @@ export class StatisticsService {
       newUsersLastWeek,
       moderatorsCount,
       sellersCount,
-      pendingRequests: totalReviewRequests,
       totalCategories,
       totalBuyers: totalBuyers.totalBuyers || 0,
       improvement: {
@@ -246,7 +222,6 @@ export class StatisticsService {
         users: `${usersImprovement}%`,
         revenue: `${revenueImprovement}%`,
         sellers: `${sellerImprovement}%`,
-        pendingRequests: `${reviewRequestImprovement}%`,
         buyers: `${buyersImprovement}%`,
       }
     };

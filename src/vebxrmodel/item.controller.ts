@@ -1,22 +1,20 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Query } from '@nestjs/common';
-import { VebxrmodelService } from './vebxrmodel.service';
-import { CreateVebxrmodelDto } from './dto/create-vebxrmodel.dto';
-import { UpdateVebxrmodelDto } from './dto/update-vebxrmodel.dto';
+import { ItemService } from './item.service';
+import { CreateItemDto } from './dto/create-item.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Vebxrmodel } from './entities/vebxrmodel.entity';
+import { Item } from './entities/item.entity';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/users/user.entity';
-import { AskFromAIDto } from './dto/ask-from-ai.dto';
 
 @Controller('vebxrmodel')
-export class VebxrmodelController {
-  constructor(private readonly vebxrmodelService: VebxrmodelService) {}
+export class ItemController {
+  constructor(private readonly vebxrmodelService: ItemService) {}
 
   @Roles(UserRole.SELLER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  create(@Body() createVebxrmodelDto: CreateVebxrmodelDto, @Req() req) {
+  create(@Body() createVebxrmodelDto: CreateItemDto, @Req() req) {
     return this.vebxrmodelService.create(createVebxrmodelDto, req.user.userId);
   }
 
@@ -44,7 +42,7 @@ export class VebxrmodelController {
     @Query('rigged') rigged?: any,
     @Query('page') page: any = 1,
     @Query('pageSize') pageSize: any = 10,
-  ): Promise<{ data: Vebxrmodel[]; total: any }> {
+  ): Promise<{ data: Item[]; total: any }> {
 
     const filters = {
       category: category && !isNaN(parseInt(category, 10)) ? parseInt(category, 10) : undefined,
@@ -75,7 +73,7 @@ export class VebxrmodelController {
     @Query('page') page: any = 1,
     @Query('pageSize') pageSize: any = 10,
     @Query('keyword') keyword?: any,
-  ): Promise<{ data: Vebxrmodel[]; total: any }> {
+  ): Promise<{ data: Item[]; total: any }> {
 
     const userId = req.user.userId;
 
@@ -97,12 +95,6 @@ export class VebxrmodelController {
   @Get('modelsWithSellers')
   findSellerModels() {
     return this.vebxrmodelService.getFormattedModels();
-  }
-
-  @Post('askfromai')
-  askFromAI(@Body() askFromAIDto: AskFromAIDto) {
-    const { question, modelId } = askFromAIDto;
-    return this.vebxrmodelService.askFromAI(question, modelId);
   }
 
   // get a model by id
